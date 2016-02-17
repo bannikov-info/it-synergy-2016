@@ -1,20 +1,20 @@
 {
-  "name": "material-start",
+  "name": "it-synergy-2016",
   "private": true,
-  "version": "0.0.4",
-  "description": "A starter project for AngularJS Material",
-  "repository": "https://github.com/angular/material-start",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "",
   "licenses": [
     {
-      "type": "MIT",
-      "url": "https://github.com/angular/material/blob/master/LICENSE"
+      "type": "MIT"
     }
   ],
   "dependencies": {
     "angular": "^1.4.9",
     "angular-animate": "^1.4.9",
     "angular-aria": "^1.4.9",
-    "angular-material": "^1.0.0"
+    "angular-material": "^1.0.0",
+    "angular-route": "^1.5.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.9",
