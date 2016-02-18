@@ -10,7 +10,8 @@
                 .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
                 .icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
                 .icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
-                .icon("phone"      , "./assets/svg/phone.svg"       , 512);
+                .icon("phone"      , "./assets/svg/phone.svg"       , 512)
+                .icon("favorite24" , "./assets/svg/ic_favorite.svg" , 24);
 
                 $mdThemingProvider.theme('default')
                     .primaryPalette('brown')

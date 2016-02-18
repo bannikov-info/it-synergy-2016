@@ -50,6 +50,8 @@ md-list-item {
   padding-left: 40px;
   padding-right: 40px;
   padding-top: 5px;
+  /*width: 1024px;*/
+  /*margin: 0 auto;*/
 }
 
 #content .md-button.contact {
@@ -109,3 +111,6 @@ span.name {
   font-size:1.1em;
   padding-left:5px;
 }
+
+.carddemoBasicUsage .card-media {
+  background-color: #999999; }

@@ -1,16 +1,43 @@
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
     <md-toolbar layout="row" class="md-whiteframe-z1">
-        <md-button id="main" class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
+        <!-- <md-button id="main" class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
           <md-icon md-svg-icon="menu" ></md-icon>
-        </md-button>
+        </md-button> -->
         <h3>Синергия ИТ 2016</h3>
     </md-toolbar>
+<!-- <h1>Hello</h1> -->
+    <md-content id="content" class="carddemoBasicUsage" flex layout="column">
+        <div layout="row" layout-wrap layout-fill flex-align="space-between center">
+            <div ng-repeat="a in [1,2,3,4,5,6,7,8,9,10]" flex="20" flex-xs="100" flex-sm="50" flex-md="33">
+                <md-card>
+                    <md-card-title>
+                      <md-card-title-text>
+                        <span class="md-headline">Card with  image</span>
+                        <span class="md-subhead">Extra Large</span>
+                      </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content layout="row" layout-align="space-between">
+                      <div class="md-media-xl card-media">
+                          <md-input-container md-no-float>
+                              <input type="file" accept="image/*;capture=camera">
+                          </md-input-container>
 
-    <md-grid-list  id="content" flex md-cols="1" md-cols-md="3" md-cols-lg="5">
-        <md-grid-tile >
-            <div >
-                <span>Tile</span>
+                      </div>
+                      <md-card-actions layout="column">
+                        <md-button class="md-icon-button" aria-label="Favorite">
+                          <md-icon md-svg-icon="favorite24" />
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="Settings">
+                          <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="Share">
+                          <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+                        </md-button>
+                      </md-card-actions>
+                    </md-card-content>
+                </md-card>
             </div>
-        </md-grid-tile>
-    </md-grid-list>
+        </div>
+
+    </md-content>
 </div>
