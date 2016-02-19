@@ -1,0 +1,21 @@
+{
+  "name": "it-synergy-2016",
+  "description": "",
+  "main": "",
+  "authors": [
+    "franzy1709 <bannikov.evgeny@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/bannikov-info/it-synergy-2016",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies":{
+      "angular-qr": "latest"
+  }
+}

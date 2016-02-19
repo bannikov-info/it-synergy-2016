@@ -47,8 +47,8 @@ md-list-item {
 
 
 #content  {
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 16px;
+  padding-right: 16px;
   padding-top: 5px;
   /*width: 1024px;*/
   /*margin: 0 auto;*/
@@ -114,3 +114,7 @@ span.name {
 
 .carddemoBasicUsage .card-media {
   background-color: #999999; }
+
+.has-vote{
+    color: red;
+}
