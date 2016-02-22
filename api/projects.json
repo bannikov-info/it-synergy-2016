@@ -1,0 +1,42 @@
+[
+    {
+        "projectName": "Схема 1",
+        "sheme": "/img/project1.png"
+    },
+    {
+        "projectName": "Схема 2",
+        "sheme": "/img/project2.png"
+    },
+    {
+        "projectName": "Схема 3",
+        "sheme": "/img/project3.png"
+    },
+    {
+        "projectName": "Схема 4",
+        "sheme": "/img/project4.png"
+    },
+    {
+        "projectName": "Схема 5",
+        "sheme": "/img/project5.png"
+    },
+    {
+        "projectName": "Схема 6",
+        "sheme": "/img/project6.png"
+    },
+    {
+        "projectName": "Схема 7",
+        "sheme": "/img/project7.png"
+    },
+    {
+        "projectName": "Схема 8",
+        "sheme": "/img/project8.png"
+    },
+    {
+        "projectName": "Схема 9",
+        "sheme": "/img/project9.png"
+    },
+    {
+        "projectName": "Схема 10",
+        "sheme": "/img/project10.png"
+    }
+]

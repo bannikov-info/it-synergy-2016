@@ -15,7 +15,8 @@
     "test",
     "tests"
   ],
-  "dependencies":{
-      "angular-qr": "latest"
+  "dependencies": {
+    "angular-qr": "latest",
+    "angular-resource": "^1.5.0"
   }
 }

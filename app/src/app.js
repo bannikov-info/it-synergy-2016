@@ -1,6 +1,7 @@
 ;(function (angular) {
     angular
-        .module('starterApp', ['ngMaterial', 'users', 'ngRoute', 'voting', 'ja.qr'])
+        .module('starterApp', ['ngMaterial', 'users', 'ngRoute', 'voting',
+                               'ja.qr', 'projects'])
         .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
 
             $mdIconProvider

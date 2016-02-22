@@ -1,8 +1,8 @@
 (function(){
 "use strict";
   angular
-       .module('voting', [])
-       .controller('VotingController', ['$scope', '$mdDialog', VotingController]);
+       .module('voting')
+       .controller('VotingController', ['$scope', '$mdDialog', 'votingService', VotingController]);
 
   /**
    * Main Controller for the Angular Material Starter App
@@ -11,9 +11,19 @@
    * @param avatarsService
    * @constructor
    */
-  function VotingController($scope, $mdDialog) {
+  function VotingController($scope, $mdDialog, votingService) {
     var self = this;
     self.vote = [];
+    self.projects = [];
+
+    votingService
+        .getVoting()
+        .then(function (voting) {
+            voting.projects
+                .then(function (projects) {
+                    self.projects = projects;
+                });
+        });
 
     self.hasVote = function (shemeNum) {
         return self.vote.indexOf(shemeNum) >= 0;
@@ -43,7 +53,7 @@
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose:true,
-          fullscreen: true
+          fullscreen: false
       });
 
       function DialogController($location) {
