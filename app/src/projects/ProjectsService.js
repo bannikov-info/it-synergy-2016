@@ -9,7 +9,7 @@
         for(var i = 1;i<=7;i++){
             projects[i-1] = {
                 projectName: "Project #"+i,
-                shemeUrl: "/img/project"+i+".png"
+                shemeUrl: "/api/img/project"+i+".png"
             }
         }
 

@@ -1,8 +1,9 @@
 ;(function (angular) {
+    // console.log(!!angular);
     angular
         .module('starterApp', ['ngMaterial', 'users', 'ngRoute', 'voting',
-                               'ja.qr', 'projects'])
-        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
+                               'ja.qr', 'projects', 'auth'])
+        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, SessionServiceProvider){
 
             $mdIconProvider
                 .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -32,11 +33,45 @@
                     .when('/voting',{
                         templateUrl: './assets/parts/voting/index.html',
                         controller: 'VotingController',
-                        controllerAs: 'ctrl'
+                        controllerAs: 'ctrl',
+                        resolve: {
+                            // 'user': 'userService'
+                        }
+                    })
+                    .when('/login', {
+                        templateUrl: './assets/parts/auth/login.html'
                     })
                     .otherwise({
                         redirectTo: '/voting'
-                    })
+                    });
+
+            var $injector = angular.injector(['ng']),
+                $q = $injector.get('$q'),
+                $window = $injector.get('$window');
+
+            SessionServiceProvider.setShowLoginDialog(defaultShowLoginDialog);
+
+            function defaultShowLoginDialog(credentialsInit) {
+                var defer = $q.defer();
+
+                var credentialsObj = credentialsInit || {};
+                var cred = Object.keys(credentialsObj).map(function (val) {
+                    return credentialsObj[val];
+                }).join(':');
+
+                cred = $window.prompt('Credentials', cred);
+
+                if(!!cred){
+                    var user,pass;
+                    [user, pass] = cred.split(':');
+                    // debugger;
+                    defer.resolve({credentials: {username:user, password: pass}});
+                }else {
+                    defer.reject('No credentials');
+                }
+
+                return defer.promise;
+            };
 
         });
 }(angular));

@@ -2,7 +2,7 @@
 "use strict";
   angular
        .module('voting')
-       .controller('VotingController', ['$scope', '$mdDialog', 'votingService', VotingController]);
+       .controller('VotingController', ['$scope', '$mdDialog', 'votingService', 'userService', VotingController]);
 
   /**
    * Main Controller for the Angular Material Starter App
@@ -11,10 +11,20 @@
    * @param avatarsService
    * @constructor
    */
-  function VotingController($scope, $mdDialog, votingService) {
+  function VotingController($scope, $mdDialog, votingService, userService) {
     var self = this;
     self.vote = [];
     self.projects = [];
+
+    userService.loadAllUsers().then(
+        function (us) {
+            console.log(arguments);
+            console.log('VotingController: load users ssuccess');
+        }
+        ,function (err) {
+            console.log('VotingController: load users error');
+            console.dir(err);
+        });
 
     votingService
         .getVoting()
@@ -49,7 +59,7 @@
         $mdDialog.show({
           controller: DialogController,
           controllerAs: 'ctrl',
-          templateUrl: '/app/assets/parts/dialogs/show-qr.html',
+          templateUrl: './assets/parts/dialogs/show-qr.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           clickOutsideToClose:true,
