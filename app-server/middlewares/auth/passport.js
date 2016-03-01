@@ -1,18 +1,27 @@
 var passport = require('passport'),
     LocalStartegy = require('passport-local').Strategy;
-
-var users = require('../../models/users');
-var User = users.User;
 var debug = require('debug')('app-server:auth');
+var User = require('../../models').User;
 
 passport.use(new LocalStartegy(
     function (username, password, done) {
-        if (!users[username]){
-            debug("Не корректное имя пользователя.");
-            return done(null, false, {message: "Не корректное имя пользователя."});
+        debug('LocalStrategy...');
+        if (!username){
+            debug('username not defined')
+            return done(null, false);
         };
+        var user = User.findOne({where:{ldap_id: username}}).then(
+            function (usr) {
+                if (!usr){
+                    debug('user not found');
+                    return done(null, false);
+                }
 
-        return done(null, new User(users[username]));
+                debug('user found');
+                return done(null, usr);
+            }
+        );
+        // return done(null, false);
     }
 ));
 
@@ -20,11 +29,11 @@ passport.use(new LocalStartegy(
 
 passport.serializeUser(function (usr, done) {
     debug('serializeUser: ', usr);
-    done(null, usr.username);
+    done(null, usr.id);
 });
 passport.deserializeUser(function (id, done) {
     debug('deserializeUser: ',id);
-    done(null, users[id]);
-})
+    done(null, User.findById(id));
+});
 
 module.exports = passport;

@@ -9,8 +9,8 @@ var auth = require('./middlewares/auth');
 var passport = require('passport');
 var LocalStartegy = require('passport-local').Strategy;
 
-var usersModel = require('./models/users');
-var User=usersModel.User;
+// var usersModel = require('./models/users');
+// var User=usersModel.User;
 
 // passport.use(new LocalStartegy(
 //     function (username, password, done) {
@@ -48,83 +48,93 @@ var debug = require('debug')('app-server:app');
 // console.dir(auth);
 
 var app = express();
+var db=require('./models');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+db.sequelize.sync().then(
+    function () {
+        debug('db.sync() successfull...');
+        // view engine setup
+        app.set('views', path.join(__dirname, 'views'));
+        app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({secret: 'aaabbbccc'}));
-app.use(flash());
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(cookieParser());
+        app.use(session({secret: 'aaabbbccc'}));
+        app.use(flash());
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+        // app.use(passport.initialize());
+        // app.use(passport.session());
 
-var routes = require('./routes/index');
+        var routes = require('./routes/index');
 
-// app.use(function (req, res, next) {
-//     debug('before passport.initialize()');
-//     debug(req.body);
-//     next();
-// });
+        // app.use(function (req, res, next) {
+        //     debug('before passport.initialize()');
+        //     debug(req.body);
+        //     next();
+        // });
 
-app.use(auth.a14n.initialize());
-app.use(auth.a14n.session());
-app.use(auth.a13n.middleware());
+        app.use(auth.a14n.initialize());
+        app.use(auth.a14n.session());
+        app.use(auth.a13n.middleware());
 
-app.use('/users', auth.a13n.is('user level'), users);
-app.use(auth.a13n.is('public level'), authRoutes);
+        app.use('/users', auth.a13n.is('user level'), users);
+        app.use(auth.a13n.is('public level'), authRoutes);
 
-// app.use('/users', auth.passport.authenticate('local'), users);
-// debug(auth);
+        // app.use('/users', auth.passport.authenticate('local'), users);
+        // debug(auth);
 
-app.use('/',
-    // auth.authenticate('local', {failureRedirect: '/login'}),
-    auth.a13n.is('public level'),
-    express.static(path.resolve(__dirname, '../app')
-));
-
-
-app.use('/api', express.static(path.resolve(__dirname, '../api')));
+        app.use('/',
+            // auth.authenticate('local', {failureRedirect: '/login'}),
+            auth.a13n.is('public level'),
+            express.static(path.resolve(__dirname, '../app')
+        ));
 
 
-// app.use('/', routes);
+        app.use('/api', express.static(path.resolve(__dirname, '../api')));
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
-// error handlers
+        // app.use('/', routes);
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
+        // catch 404 and forward to error handler
+        app.use(function(req, res, next) {
+          var err = new Error('Not Found');
+          err.status = 404;
+          next(err);
+        });
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+        // error handlers
+
+        // development error handler
+        // will print stacktrace
+        if (app.get('env') === 'development') {
+          app.use(function(err, req, res, next) {
+            res.status(err.status || 500);
+            res.render('error', {
+              message: err.message,
+              error: err
+            });
+          });
+        }
+
+        // production error handler
+        // no stacktraces leaked to user
+        app.use(function(err, req, res, next) {
+          res.status(err.status || 500);
+          res.render('error', {
+            message: err.message,
+            error: {}
+          });
+        });
+
+    }
+    ,function (err) {
+        debug('db.sync() error:\n', err)
+    }
+)
 
 
 module.exports = app;

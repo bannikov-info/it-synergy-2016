@@ -1,4 +1,5 @@
 var ConnectRoles = require('connect-roles');
+var debug = require('debug')('app-server:auth');
 
 var uRoles = new ConnectRoles({
   failureHandler: function (req, res, action) {
@@ -35,8 +36,10 @@ uRoles.use('admin level', function (req) {
 });
 
 uRoles.use('user level', function (req) {
-    if(!!req.user){
-        return req.user.hasRole('user');
+    var usr = req.user;
+    if(!!usr){
+        debug('user level: ', usr);
+        return usr.hasRole('user');
     };
 
     return false;
