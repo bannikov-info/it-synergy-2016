@@ -1,5 +1,5 @@
 "use strict";
-
+var debug = require('debug')('app-server:models');
 var fs        = require("fs");
 var path      = require("path");
 var Sequelize = require("sequelize");
@@ -25,10 +25,9 @@ fs
   });
 
 Object.keys(db).forEach(function(modelName) {
-  if (("associate" in db[modelName])
-      && ((typeof(db[modelName].assciate)) === 'function'))
+  if (("associate" in db[modelName]))
   {
-    db[modelName].associate(db);
+      db[modelName].associate(db);
   }
 });
 

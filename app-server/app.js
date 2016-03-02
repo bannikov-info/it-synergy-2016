@@ -6,39 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var auth = require('./middlewares/auth');
-var passport = require('passport');
-var LocalStartegy = require('passport-local').Strategy;
-
-// var usersModel = require('./models/users');
-// var User=usersModel.User;
-
-// passport.use(new LocalStartegy(
-//     function (username, password, done) {
-//         debug('a14n ', arguments);
-//         if (!usersModel[username]){
-//             debug("Не корректное имя пользователя.");
-//             // debug(users);
-//             return done(null, false, {message: "Не корректное имя пользователя."+username});
-//         };
-//
-//         var usr = new User(usersModel[username]);
-//         debug(usr);
-//         return done(null, usr);
-//     }
-// ));
-//
-// passport.serializeUser(function (usr, done) {
-//     debug('serializeUser: ', usr.username);
-//     done(null, usr.username);
-// });
-// passport.deserializeUser(function (id, done) {
-//     debug('deserializeUser: ',id);
-//     done(null, usersModel[id]);
-// });
-
-
-
 var authRoutes = require('./routes/auth');
+
 var users = require('./routes/users');
 var session = require('express-session');
 var flash = require('connect-flash');
@@ -50,9 +19,48 @@ var debug = require('debug')('app-server:app');
 var app = express();
 var db=require('./models');
 
-db.sequelize.sync().then(
-    function () {
+var isDev = process.env.NODE_ENV === 'development';
+debug('NODE_ENV: '+process.env.NODE_ENV);
+
+db.sequelize.sync({force: isDev})
+    .then(function () {
+        if(isDev){
+            var User = db.User;
+            // var eugene = User.create({firstName: 'Eugene', ldap_id: 'eugene', roles: (2)});
+            // var moderator = User.create({firstName: 'moderator', ldap_id: 'moderator', roles: (2|4)});
+            var admin = User.create({firstName: 'admin', ldap_id: 'admin', roles: (User.getRoleCode('admin')|User.getRoleCode('moderator')|User.getRoleCode('user'))});
+
+            var Project = db.Project;
+
+            Array.apply(null, {length: 10})
+                .forEach(function (val, idx) {
+                    Project.create({name: 'Project_'+idx}).then(
+                        function (proj) {
+                            User.create({
+                                firstName: 'eugene'+(idx ? idx : ''),
+                                ldap_id: 'eugene'+(idx ? idx : ''),
+                                roles: User.getRoleCode('user')
+                            }).then(function (user) {
+                                proj.addMember(user);
+                            });
+                            User.create({
+                                firstName: 'moderator'+(idx ? idx : ''),
+                                ldap_id: 'moderator'+(idx ? idx : ''),
+                                roles: User.getRoleCode('moderator') | User.getRoleCode('moderator')
+                            }).then(function (user) {
+                                // debug(proj);
+                                proj.addMember(user);
+                            });
+                        }
+                    );
+                });
+        };
+
+        return this;
+    })
+    .then(function () {
         debug('db.sync() successfull...');
+        // debug(arguments);
         // view engine setup
         app.set('views', path.join(__dirname, 'views'));
         app.set('view engine', 'jade');
@@ -66,16 +74,7 @@ db.sequelize.sync().then(
         app.use(session({secret: 'aaabbbccc'}));
         app.use(flash());
 
-        // app.use(passport.initialize());
-        // app.use(passport.session());
-
         var routes = require('./routes/index');
-
-        // app.use(function (req, res, next) {
-        //     debug('before passport.initialize()');
-        //     debug(req.body);
-        //     next();
-        // });
 
         app.use(auth.a14n.initialize());
         app.use(auth.a14n.session());
@@ -83,9 +82,7 @@ db.sequelize.sync().then(
 
         app.use('/users', auth.a13n.is('user level'), users);
         app.use(auth.a13n.is('public level'), authRoutes);
-
-        // app.use('/users', auth.passport.authenticate('local'), users);
-        // debug(auth);
+        app.use('/projects', auth.a13n.is('public level'), require('./routes/projects'));
 
         app.use('/',
             // auth.authenticate('local', {failureRedirect: '/login'}),
@@ -93,11 +90,8 @@ db.sequelize.sync().then(
             express.static(path.resolve(__dirname, '../app')
         ));
 
-
         app.use('/api', express.static(path.resolve(__dirname, '../api')));
-
-
-        // app.use('/', routes);
+        // app.use('/api', require('./routes/api'));
 
         // catch 404 and forward to error handler
         app.use(function(req, res, next) {
@@ -130,6 +124,7 @@ db.sequelize.sync().then(
           });
         });
 
+        // debug(app._router.stack);
     }
     ,function (err) {
         debug('db.sync() error:\n', err)

@@ -18,6 +18,8 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "sequelize": "^3.19.3",
+    "sequelize-restful": "^0.4.3",
+    "sequelize-restful-extended": "^0.1.4",
     "serve-favicon": "~2.3.0",
     "sqlite": "0.0.4",
     "sqlite3": "^3.1.1"
