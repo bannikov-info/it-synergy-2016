@@ -37,6 +37,7 @@ uRoles.use('admin level', function (req) {
 
 uRoles.use('user level', function (req) {
     var usr = req.user;
+    debug(usr);
     if(!!usr){
         debug('user level: ', usr);
         return usr.hasRole('user');

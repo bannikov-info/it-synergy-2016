@@ -1,4 +1,5 @@
 // var Project = require('./index').Project;
+var debug = require('debug')('app-server:models');
 
 module.exports = function (sequelize, DataType) {
     var User = sequelize.define('User',
@@ -34,23 +35,35 @@ module.exports = function (sequelize, DataType) {
             instanceMethods: {
                 hasRole: function (role) {
                     // body...
-                    role = getRoleCode(role);
+                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    // role = getRoleCode(role);
 
                     return (this.roles & role) === role;
                 },
                 addRole: function (role) {
-                    role = getRoleCode(role);
+                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    // role = getRoleCode(role);
 
                     return this.roles |= role;
                 },
                 removeRole: function (role) {
-                    role = getRoleCode(role);
+                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    // role = getRoleCode(role);
 
                     return this.roles &= ~role;
                 }
             }
         }
     );
+
+    User.hook('afterSync', function () {
+        debug('User afterSync()');
+    });
+
+    User.hook('afterBulkSync', function () {
+        debug('User afterBulkSync()');
+    });
+
 
     return User;
 
@@ -61,9 +74,7 @@ module.exports = function (sequelize, DataType) {
             moderator: 4,
             admin: 8
         };
-
-        if(typeof(role) === 'string'){ role = getRoleCode(role)};
-
+        
         return roles[role];
     }
 

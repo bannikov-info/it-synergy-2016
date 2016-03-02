@@ -10,18 +10,23 @@ passport.use(new LocalStartegy(
             debug('username not defined')
             return done(null, false);
         };
-        var user = User.findOne({where:{ldap_id: username}}).then(
+
+        User.findOne({where:{ldap_id: username}})
+        .then(
             function (usr) {
                 if (!usr){
                     debug('user not found');
-                    return done(null, false);
+                    return done(null, false, {message: 'user '+username+' not found'});
+                }else{
+                    debug('user found');
+                    return done(null, usr);
                 }
-
-                debug('user found');
-                return done(null, usr);
+            },
+            function (err) {
+                debug('user search error: ', err);
+                return done(err, false);
             }
         );
-        // return done(null, false);
     }
 ));
 
@@ -33,7 +38,19 @@ passport.serializeUser(function (usr, done) {
 });
 passport.deserializeUser(function (id, done) {
     debug('deserializeUser: ',id);
-    done(null, User.findById(id));
+    // done(null, User.findById(id);
+    User.findById(id).then(
+        function (usr) {
+            if(!usr){
+                done(null, false, {message: 'user '+id+' not found'});
+            }else{
+                done(null, usr);
+            }
+        },
+        function (err) {
+            done(err, false);
+        }
+    )
 });
 
 module.exports = passport;
