@@ -63,7 +63,9 @@
 
                 if(!!cred){
                     var user,pass;
-                    [user, pass] = cred.split(':');
+                    var credentials = cred.split(':');
+                    user = credentials[0];
+                    pass = credentials[1];
                     // debugger;
                     defer.resolve({credentials: {username:user, password: pass}});
                 }else {
