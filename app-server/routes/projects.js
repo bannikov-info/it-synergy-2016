@@ -2,38 +2,101 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('app-server:project');
 var Project = require('../models').Project;
+var project_resolver = require('../middlewares/project-resolver');
+var url = require('url');
+var File = require('./models').File;
+var config = require('../config');
+var fs = require('fs');
 
 /* GET users listing. */
 
-router.get('/', function (re, res, next) {
+var appRoot = global.appRoot || __dirname;
+var upload_folder = path.resolve(appRoot, config.get('project_uploads'));
+var upload = require('multer')({dest: upload_folder});
+
+router.get('/', function (req, res, next) {
     Project.findAll().then(
-        function (proj) {
-            // console.dir(users)
-            res.json(proj.map(function (projInst) {
-                return projInst.toJSON();
-            }));
-        },
-        function (err) {
-            next(err);
-        }
+        modelsCollectionToJSON.bind(this, res, null),
+        next
     )
 });
 
-router.get('/:project_name', function (req, res, next) {
-    // body...
-    Project.findOne({where: {project_name: req.params.project_name}})
-        .then(
-            function (proj) {
-                if(!proj){
-                    res.sendStatus(404);
-                }else{
-                    res.json(proj.toJSON());
-                }
+router.post('/new',
+    function (req, res, next) {
+        debug(req.body);
+        var newProject = Project.build(req.body.project);
+
+        if(!!req.user){
+            newProject.addMember(req.user);
+
+        };
+
+        newProject.save().then(
+            function (newProject) {
+                res.set('Location', url.resolve(req.baseUrl+'/', newProject.id+''));
+                res.sendStatus(201);
             },
-            function (err) {
-                next(err);
-            }
+            next
+        );
+
+
+    }
+);
+
+router.delete('/:proj_id',
+    project_resolver({require: true}),
+    function (req, res, next) {
+        req.project.destroy().then(
+            function () {
+                res.send();
+            },
+            next
         )
-})
+    }
+)
+
+router.get('/:proj_id',
+    project_resolver({require: true}),
+    function (req, res, next) {
+        res.json(req.project.toJSON());
+    }
+);
+
+router.get('/:proj_id/members',
+    project_resolver({require: true}),
+    function (req, res, next) {
+        req.project.getMember().then(
+            modelsCollectionToJSON.bind(this, res, null),
+            next
+        );
+    }
+);
+
+router.get('/:proj_id/images',
+    project_resolver({require: true}),
+    function (req, res, next) {
+        req.project.getFiles({where: {mimetype: {$like: 'image/%'}}})
+            .then(
+                modelsCollectionToJSON.bind(this, res, null),
+                function (err) {
+                    debug(err);
+                    next(err);
+                }
+            );
+    }
+);
+
+router.post('/:proj_id/images',
+    project_resolver({require: true}),
+    function (req, res, next) {
+
+    }
+)
 
 module.exports = router;
+
+function modelsCollectionToJSON(res, jsonOptions, models) {
+    return res.json(models.map(function (model) {
+        return model.toJSON(jsonOptions);
+    }));
+}

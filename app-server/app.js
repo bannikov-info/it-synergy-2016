@@ -1,3 +1,5 @@
+global.appRoot = __dirname;
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -13,6 +15,7 @@ var session = require('express-session');
 var flash = require('connect-flash');
 
 var debug = require('debug')('app-server:app');
+
 
 // console.dir(auth);
 
