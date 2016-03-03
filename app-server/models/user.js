@@ -35,22 +35,35 @@ module.exports = function (sequelize, DataType) {
             instanceMethods: {
                 hasRole: function (role) {
                     // body...
-                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    if(typeof(role) === 'string'){ role = User.getRoleCode(role)};
                     // role = getRoleCode(role);
 
                     return (this.roles & role) === role;
                 },
                 addRole: function (role) {
-                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    if(typeof(role) === 'string'){ role = User.getRoleCode(role)};
                     // role = getRoleCode(role);
 
                     return this.roles |= role;
                 },
                 removeRole: function (role) {
-                    if(typeof(role) === 'string'){ role = getRoleCode(role)};
+                    if(typeof(role) === 'string'){ role = User.getRoleCode(role)};
                     // role = getRoleCode(role);
 
                     return this.roles &= ~role;
+                }
+            },
+
+            classMethods: {
+                getRoleCode: function(role){
+                    var roles = {
+                        inactive: 1,
+                        user: 2,
+                        moderator: 4,
+                        admin: 8
+                    };
+
+                    return roles[role];
                 }
             }
         }
@@ -66,16 +79,5 @@ module.exports = function (sequelize, DataType) {
 
 
     return User;
-
-    function getRoleCode(role){
-        var roles = {
-            inactive: 1,
-            user: 2,
-            moderator: 4,
-            admin: 8
-        };
-        
-        return roles[role];
-    }
 
 }

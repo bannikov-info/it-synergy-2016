@@ -1,3 +1,4 @@
+var debug = require('debug')('app-server:models');
 module.exports = function (sequelize, DataType) {
     var Project = sequelize.define('Project',
         {
@@ -6,7 +7,8 @@ module.exports = function (sequelize, DataType) {
         {
             classMethods: {
                 associate: function (models) {
-                    Project.hasMany(models.User, {as: 'Members'});
+                    debug('associate Project...');
+                    Project.hasMany(models.User, {as: 'Member'});
                     Project.hasMany(models.File, {as: 'Files'})
                 }
             }
