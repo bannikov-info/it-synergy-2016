@@ -62,11 +62,14 @@ db.sequelize.sync({force: isDev})
         app.use('/',
             // auth.authenticate('local', {failureRedirect: '/login'}),
             auth.a13n.is('public level'),
-            express.static(path.resolve(__dirname, '../app')
+            express.static(path.resolve(appRoot, '../app')
         ));
 
-        app.use('/api', require('./routes/api'));
-        app.use('/api', express.static(path.resolve(__dirname, '../api')));
+        app.use('/api',
+            auth.a13n.is('user level'),
+            require('./routes/api'),
+            express.static(path.resolve(appRoot, '../api'))
+        );
 
         // catch 404 and forward to error handler
         app.use(function(req, res, next) {
