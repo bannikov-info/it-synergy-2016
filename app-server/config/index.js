@@ -5,7 +5,7 @@ nconf.argv()
      .env()
      .file('./config.json');
 
-nconf.default({
+nconf.defaults({
     project_uploads: './uploads'
 })
 

@@ -7,4 +7,5 @@ tmp
 .idea
 app/jspm_packages
 *.log
-.db
+app-server/**/.db/*
+app-server/uploads/*

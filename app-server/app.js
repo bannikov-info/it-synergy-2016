@@ -28,35 +28,7 @@ debug('NODE_ENV: '+process.env.NODE_ENV);
 db.sequelize.sync({force: isDev})
     .then(function () {
         if(isDev){
-            var User = db.User;
-            // var eugene = User.create({firstName: 'Eugene', ldap_id: 'eugene', roles: (2)});
-            // var moderator = User.create({firstName: 'moderator', ldap_id: 'moderator', roles: (2|4)});
-            var admin = User.create({firstName: 'admin', ldap_id: 'admin', roles: (User.getRoleCode('admin')|User.getRoleCode('moderator')|User.getRoleCode('user'))});
-
-            var Project = db.Project;
-
-            Array.apply(null, {length: 10})
-                .forEach(function (val, idx) {
-                    Project.create({name: 'Project_'+idx}).then(
-                        function (proj) {
-                            User.create({
-                                firstName: 'eugene'+(idx ? idx : ''),
-                                ldap_id: 'eugene'+(idx ? idx : ''),
-                                roles: User.getRoleCode('user')
-                            }).then(function (user) {
-                                proj.addMember(user);
-                            });
-                            User.create({
-                                firstName: 'moderator'+(idx ? idx : ''),
-                                ldap_id: 'moderator'+(idx ? idx : ''),
-                                roles: User.getRoleCode('moderator') | User.getRoleCode('moderator')
-                            }).then(function (user) {
-                                // debug(proj);
-                                proj.addMember(user);
-                            });
-                        }
-                    );
-                });
+            InitDevDB()
         };
 
         return this;
@@ -93,8 +65,8 @@ db.sequelize.sync({force: isDev})
             express.static(path.resolve(__dirname, '../app')
         ));
 
+        app.use('/api', require('./routes/api'));
         app.use('/api', express.static(path.resolve(__dirname, '../api')));
-        // app.use('/api', require('./routes/api'));
 
         // catch 404 and forward to error handler
         app.use(function(req, res, next) {
@@ -136,3 +108,49 @@ db.sequelize.sync({force: isDev})
 
 
 module.exports = app;
+
+function InitDevDB() {
+    var User = db.User;
+    // var eugene = User.create({firstName: 'Eugene', ldap_id: 'eugene', roles: (2)});
+    // var moderator = User.create({firstName: 'moderator', ldap_id: 'moderator', roles: (2|4)});
+    var admin = User.create({firstName: 'admin', ldap_id: 'admin', roles: (User.getRoleCode('admin')|User.getRoleCode('moderator')|User.getRoleCode('user'))});
+
+    var Project = db.Project;
+    var File = db.File;
+
+    Array.apply(null, {length: 7})
+        .forEach(function (val, idx) {
+            Project.create({name: 'Project_'+idx}).then(
+                function (proj) {
+                    User.create({
+                        firstName: 'eugene'+(idx ? idx : ''),
+                        ldap_id: 'eugene'+(idx ? idx : ''),
+                        roles: User.getRoleCode('user')
+                    }).then(function (user) {
+                        proj.addMember(user);
+                    });
+                    User.create({
+                        firstName: 'moderator'+(idx ? idx : ''),
+                        ldap_id: 'moderator'+(idx ? idx : ''),
+                        roles: User.getRoleCode('moderator') | User.getRoleCode('moderator')
+                    }).then(function (user) {
+                        // debug(proj);
+                        proj.addMember(user);
+                    });
+
+                    var imgFileName = ['project',proj.id,'.png'].join();
+                    File.create({
+                        filename: imgFileName,
+                        originalname: imgFileName,
+                        path: path.resolve(global.appRoot, '../api/img/'+imgFileName),
+                        size: 0,
+                        mimetype: 'image/png'
+                    }).then(
+                        function (img) {
+                            proj.addFile(img);
+                        }
+                    )
+                }
+            );
+        });
+}

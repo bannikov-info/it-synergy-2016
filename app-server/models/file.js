@@ -2,6 +2,7 @@ module.exports = function (sequelize, DataType) {
     var File = sequelize.define('File',
         {
             filename: {type: DataType.STRING, field: 'file_name', allowNull: false},
+            originalname: {type: DataType.STRING, field: 'originalname', allowNull: false},
             path: {type: DataType.STRING, field: 'file_path', allowNull: false},
             mimetype: {type: DataType.STRING, field: 'mimetype', allowNull: false},
             encoding: {type: DataType.STRING, field: 'encoding'},
