@@ -2,6 +2,7 @@ global.appRoot = __dirname;
 
 var express = require('express');
 var path = require('path');
+var url = require('url');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -57,7 +58,9 @@ db.sequelize.sync({force: isDev})
 
         app.use('/users', auth.a13n.is('user level'), users);
         app.use(auth.a13n.is('public level'), authRoutes);
-        app.use('/projects', auth.a13n.is('public level'), require('./routes/projects'));
+        app.use('/projects',
+            auth.a13n.is('user level'),
+            require('./routes/projects'));
 
         app.use('/',
             // auth.authenticate('local', {failureRedirect: '/login'}),
@@ -121,8 +124,9 @@ function InitDevDB() {
     var Project = db.Project;
     var File = db.File;
 
-    Array.apply(null, {length: 7})
+    Array.apply(null, {length: 10})
         .forEach(function (val, idx) {
+            // var idx = idx+1;
             Project.create({name: 'Project_'+idx}).then(
                 function (proj) {
                     User.create({
@@ -141,13 +145,14 @@ function InitDevDB() {
                         proj.addMember(user);
                     });
 
-                    var imgFileName = ['project',proj.id,'.png'].join();
+                    var imgFileName = ['project',proj.id,'.png'].join('');
                     File.create({
                         filename: imgFileName,
                         originalname: imgFileName,
                         path: path.resolve(global.appRoot, '../api/img/'+imgFileName),
                         size: 0,
-                        mimetype: 'image/png'
+                        mimetype: 'image/png',
+                        uri: url.resolve('/api/img/', imgFileName)
                     }).then(
                         function (img) {
                             proj.addFile(img);
