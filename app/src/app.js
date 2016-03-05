@@ -2,7 +2,7 @@
     // console.log(!!angular);
     angular
         .module('starterApp', ['ngMaterial', 'users', 'ngRoute', 'voting',
-                               'ja.qr', 'projects', 'auth'])
+                               'ja.qr', 'projects', 'auth', 'ngResource'])
         .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, SessionServiceProvider){
 
             $mdIconProvider
@@ -40,6 +40,12 @@
                     })
                     .when('/login', {
                         templateUrl: './assets/parts/auth/login.html'
+                    })
+                    .when('/projects', {
+                        templateUrl: './assets/parts/projects/index.html',
+                        controller: 'ProjectsIndexController',
+                        controllerAs: 'ctrl',
+                        resolve:{}
                     })
                     .otherwise({
                         redirectTo: '/voting'

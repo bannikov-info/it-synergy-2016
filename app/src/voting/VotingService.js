@@ -12,7 +12,7 @@
 
         function Voting(name) {
             this.votingName = name;
-            this.projects = projectsService.getProjects()
+            this.projects = projectsService
         };
     }
 })();

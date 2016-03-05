@@ -2,7 +2,7 @@
 "use strict";
   angular
        .module('voting')
-       .controller('VotingController', ['$scope', '$mdDialog', 'votingService', 'userService', VotingController]);
+       .controller('VotingController', ['$scope', '$mdDialog', 'votingService', 'userService' , 'projectsService', VotingController]);
 
   /**
    * Main Controller for the Angular Material Starter App
@@ -11,29 +11,14 @@
    * @param avatarsService
    * @constructor
    */
-  function VotingController($scope, $mdDialog, votingService, userService) {
+  function VotingController($scope, $mdDialog, votingService, userService, projectsService) {
     var self = this;
     self.vote = [];
     self.projects = [];
 
-    userService.loadAllUsers().then(
-        function (us) {
-            console.log(arguments);
-            console.log('VotingController: load users ssuccess');
-        }
-        ,function (err) {
-            console.log('VotingController: load users error');
-            console.dir(err);
-        });
-
-    votingService
-        .getVoting()
-        .then(function (voting) {
-            voting.projects
-                .then(function (projects) {
-                    self.projects = projects;
-                });
-        });
+    self.projects = projectsService.getAllProjects({}, function () {
+        // debugger;
+    });
 
     self.hasVote = function (shemeNum) {
         return self.vote.indexOf(shemeNum) >= 0;
