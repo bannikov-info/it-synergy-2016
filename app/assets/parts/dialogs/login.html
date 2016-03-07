@@ -1,27 +1,28 @@
 <md-dialog>
+    <form id="login" novalidate   ng-submit="done(credentials)"></form>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Аутентификация</h2>
         </div>
-    </md-tolbar>
+    </md-toolbar>
     <md-dialog-content>
-        <div class="md-dialog-content">
+        <div class="md-dialog-content" layout="column">
             <md-input-container>
                 <label>Имя пользователя</label>
-                <input ng-model="credentials.user">
+                <input ng-model="credentials.username" form="login">
             </md-input-container>
             <md-input-container>
                 <label>Пароль</label>
-                <input ng-model="credentials.pass" type="password">
+                <input ng-model="credentials.password" type="password" form="login">
             </md-input-container>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="done(credentials)">
-            Ok
-        </md-button>
-        <md-button ng-click="cancel()">
+        <md-button ng-click="cancel()" form="login" type="button">
             Отмена
+        </md-button>
+        <md-button class="md-primary" type="submit" form="login">
+            Ok
         </md-button>
     </md-dialog-actions>
 </md-dialog>

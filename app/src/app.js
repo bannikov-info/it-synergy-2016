@@ -3,7 +3,7 @@
     angular
         .module('app', ['ngMaterial', 'users', 'ngRoute', 'voting',
                                'ja.qr', 'projects', 'auth', 'ngResource'])
-        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, SessionServiceProvider){
+        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
 
             $mdIconProvider
                 .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -51,60 +51,8 @@
                         resolve:{}
                     })
                     .otherwise({
-                        redirectTo: '/voting'
+                        redirectTo: '/'
                     });
-
-            var $injector = angular.injector(['ng']),
-                // $mdInjector = angular.injector(['ngMaterial']);
-                $q =        $injector.get('$q'),
-                $window =   $injector.get('$window');
-                // $mdDialog = $mdInjector.get('$mdDialog');
-
-            SessionServiceProvider.setShowLoginDialog(defaultShowLoginDialog);
-
-            // defaultShowLoginDialog.$inject(['$mdDialog']);
-            function defaultShowLoginDialog(credentialsInit) {
-                var defer = $q.defer();
-
-                var credentialsObj = credentialsInit || {};
-                var cred = Object.keys(credentialsObj).map(function (val) {
-                    return credentialsObj[val];
-                }).join(':');
-
-                // cred = $window.prompt('Credentials', cred);
-
-                // if(!!cred){
-                //     var user,pass;
-                //     var credentials = cred.split(':');
-                //     user = credentials[0];
-                //     pass = credentials[1];
-                //     // debugger;
-                //     defer.resolve({credentials: {username:user, password: pass}});
-                // }else {
-                //     defer.reject('No credentials');
-                // }
-
-                $mdDialog.show({
-                    templateUrl: '/assets/parts/dialogs/login.html',
-                    scope: {
-                        credentials: credentialsObj
-                    },
-                    // controller: function ($scope, $mdDialog) {
-                    //
-                    //     $scope.done = $mdDialog.prototype.resolve.bind($mdDialog);
-                    //     $scope.cancel = $mdDialog.prototype.cancel.bind($mdDialog, {message: 'No Credentials'});
-                    // }
-                }).then(
-                    function (resp) {
-                        defer.resolve({credentials: resp})
-                    },
-                    function (err) {
-                        defer.reject(err);
-                    }
-                );
-
-                return defer.promise;
-            };
 
         });
 }(angular));
