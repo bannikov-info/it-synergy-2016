@@ -6,12 +6,15 @@ var auth = require('../middlewares/auth');
 
 /* GET users listing. */
 router.post('/login',
+    function (req, res, next) {
+        // body...
+        debug('post /login');
+        debug(req.body);
+        next();
+    },
     auth.a14n.authenticate('local'),
-    // passport.authenticate('local'),
     function(req, res) {
-        var redirectURI = req.body.sessionInitSuccessRedirectURI || '/';
-        res.set('Location', redirectURI);
-        res.sendStatus(201);
+        res.sendStatus(200);
     }
 );
 

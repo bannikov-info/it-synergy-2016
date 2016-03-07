@@ -40,7 +40,7 @@
         console.log(self.vote);
     };
 
-    self.showQr = function (ev) {
+    $scope.showQr = function (ev) {
         $mdDialog.show({
           controller: DialogController,
           controllerAs: 'ctrl',

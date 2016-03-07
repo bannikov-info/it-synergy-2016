@@ -1,9 +1,9 @@
 ;(function (angular) {
     // console.log(!!angular);
     angular
-        .module('starterApp', ['ngMaterial', 'users', 'ngRoute', 'voting',
+        .module('app', ['ngMaterial', 'users', 'ngRoute', 'voting',
                                'ja.qr', 'projects', 'auth', 'ngResource'])
-        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, SessionServiceProvider){
+        .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
 
             $mdIconProvider
                 .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -15,7 +15,9 @@
                 .icon("phone"      , "./assets/svg/phone.svg"       , 512)
                 .icon("favorite24" , "./assets/svg/ic_favorite.svg" , 24)
                 .icon("favorite24v" , "./assets/svg/ic_favorite_vote.svg" , 24)
-                .icon("qr" , "./assets/svg/ic_pages_black_48px.svg" , 48);
+                .icon("qr" , "./assets/svg/ic_pages_black_48px.svg" , 48)
+                .icon("projects" , "./assets/svg/ic_dvr_48px.svg" , 48)
+                .icon("voting" , "./assets/svg/voting.svg" , 48);
 
                 $mdThemingProvider.theme('default')
                     .primaryPalette('green')
@@ -23,7 +25,8 @@
 
                 $routeProvider
                     .when('/', {
-                        templateUrl: './assets/parts/index.html'
+                        templateUrl: './assets/parts/index-dev.html',
+                        controller: 'IndexController'
                     })
                     .when('/users', {
                         controller: 'UserController',
@@ -48,38 +51,8 @@
                         resolve:{}
                     })
                     .otherwise({
-                        redirectTo: '/voting'
+                        redirectTo: '/'
                     });
-
-            var $injector = angular.injector(['ng']),
-                $q = $injector.get('$q'),
-                $window = $injector.get('$window');
-
-            SessionServiceProvider.setShowLoginDialog(defaultShowLoginDialog);
-
-            function defaultShowLoginDialog(credentialsInit) {
-                var defer = $q.defer();
-
-                var credentialsObj = credentialsInit || {};
-                var cred = Object.keys(credentialsObj).map(function (val) {
-                    return credentialsObj[val];
-                }).join(':');
-
-                cred = $window.prompt('Credentials', cred);
-
-                if(!!cred){
-                    var user,pass;
-                    var credentials = cred.split(':');
-                    user = credentials[0];
-                    pass = credentials[1];
-                    // debugger;
-                    defer.resolve({credentials: {username:user, password: pass}});
-                }else {
-                    defer.reject('No credentials');
-                }
-
-                return defer.promise;
-            };
 
         });
 }(angular));

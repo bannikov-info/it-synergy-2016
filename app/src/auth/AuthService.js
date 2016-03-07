@@ -5,44 +5,26 @@
 
     module
         .provider('AuthIntrceptor', AuthIntrceptorProvider)
-        .provider('SessionService', SessionServiceProvider)
+        .service('SessionService', SessionService)
+        .constant('AUTH_EVENTS', {
+            authError: 'auth:auth-error',
+            sessionInit: 'auth:session-init',
+            sessionReject: 'auth:session-reject'
+        })
         .config(['$httpProvider', function ($httpProvider) {
-            // console.log('configure $httpProvid');
             $httpProvider.interceptors.push('AuthIntrceptor');
         }]);
 
+
     function AuthIntrceptorProvider() {
         return {
-            $get: function($q, $injector, $location, $window){
+            $get: function($q, $injector, $location, $window, $rootScope, AUTH_EVENTS){
                 return {
                     responseError: function (response) {
+                        console.log('AuthIntrceptorProvider: '+response.status);
                         if ((response.status === 401) || (response.status === 403)){
-
-                            var SessionService = $injector.get('SessionService');
-
-                            var defer = $q.defer();
-
-                            SessionService
-                                .sessionInit(
-                                    {
-                                        username: 'eugene',
-                                        password: 'passwd'
-                                    }
-                                    ,{
-                                        sessionInitSuccessRedirectURI: $window.location.href
-                                    }
-                                ).then(
-                                    function (resp) {
-                                        defer.resolve(response.config);
-                                    },
-                                    function (err) {
-                                        defer.reject(response.config);
-                                    }
-                                )
-
-                            return defer.promise;
-
-                            // return
+                            // console.log(());
+                            $rootScope.$broadcast(AUTH_EVENTS.authError, response, $window.location.href);
                         }
 
                         return $q.reject(response);
@@ -52,90 +34,37 @@
         }
     };
 
-    function SessionServiceProvider() {
-        // body...
-        var showLoginDialog = null;
-
+    SessionService.$inject = ['$q', '$http', '$window', '$rootScope', 'AUTH_EVENTS'];
+    function SessionService($q, $http, $window, $rootScope, AUTH_EVENTS) {
         return {
-            setShowLoginDialog: function (showLoginDialogFn) {
-                showLoginDialog = showLoginDialogFn;
-            },
-            $get: function ($q, $http, $window) {
-                function getShowLoginDialog(){
-                    return showLoginDialog;
-                };
+            sessionInit: function (credentials, uriConfig) {
 
-                return {
-                    sessionInit: function (credentials, uriConfig) {
+                var uriConfig = uriConfig || {};
+                uriConfig['sessionInitMethodURI'] = uriConfig['sessionInitMethodURI'] || '/login';
 
-                        var uriConfig = uriConfig || {};
-                        uriConfig['sessionInitMethodURI'] = uriConfig['sessionInitMethodURI'] || '/login';
+                var defer = $q.defer();
+                var credentials = angular.copy(credentials);
 
-                        var loginDialog = getShowLoginDialog() || function () {
-                                console.log('call default showLoginDialog handler');
-                                return $q.reject();
-                            };
-                        var defer = $q.defer();
+                $http
+                    .post(uriConfig.sessionInitMethodURI,
+                        {
+                            username: credentials.username,
+                            password: credentials.password
+                        })
+                    .then(
+                        function (resp) {
+                            $rootScope.$broadcast(AUTH_EVENTS.sessionInit, resp);
+                            defer.resolve(resp);
+                        },
+                        function (err) {
+                            $rootScope.$broadcast(AUTH_EVENTS.sessionReject, err)
+                            defer.reject(err);
+                        }
+                    );
 
-                        loginDialog(credentials).then(
-                            function (response) {
-                                console.log('login prompt success');
+                return defer.promise;
 
-                                defer.resolve(
-                                    (function($http){
-                                        var resolveDefer = $q.defer()
-
-                                        $http
-                                            .post(uriConfig.sessionInitMethodURI,
-                                                {
-                                                    username: response.credentials.username,
-                                                    password: response.credentials.password,
-                                                    sessionInitSuccessRedirectURI: [uriConfig.sessionInitSuccessRedirectURI].join('/')
-                                                })
-                                            .then(
-                                                function (resp) {
-                                                    console.log('login success');
-                                                    if(resp.status === 201){
-                                                        var newLocation = resp.headers('Location');
-                                                        if ($window.location.href === newLocation){
-                                                            $window.location.reload(true);
-                                                        }else{
-                                                            $window.location.href = resp.headers('Location');
-                                                        }
-                                                        resolveDefer.reject();
-                                                    }else{
-                                                        resolveDefer.resolve(resp);
-                                                    }
-
-                                                },
-                                                function (err) {
-                                                    console.log('login failed');
-                                                    resolveDefer.reject(err);
-                                                }
-                                            )
-
-
-                                        return resolveDefer.promise;
-                                        // return
-                                    })($http)
-                                    )
-                            },
-                            function (err) {
-                                console.log('login prompt failed');
-                                defer.reject(err);
-                            }
-                        );
-
-                        return defer.promise;
-
-                        // return $q(function (resolve, reject) {
-                        //
-                        // })
-
-                    }
-                };
             }
-        }
+        };
     }
-
 })();
