@@ -1,3 +1,3 @@
 ;(function () {
-    var module = angular.module('projects', []);
+    var module = angular.module('projects', ['ngFileUpload']);
 }())

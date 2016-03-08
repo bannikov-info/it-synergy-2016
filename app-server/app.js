@@ -59,7 +59,7 @@ db.sequelize.sync({force: isDev})
         app.use('/users', auth.a13n.is('user level'), users);
         app.use(auth.a13n.is('public level'), authRoutes);
         app.use('/projects',
-            auth.a13n.is('user level'),
+            auth.a13n.is('moderator level'),
             require('./routes/projects'));
 
         app.use('/',
@@ -139,7 +139,7 @@ function InitDevDB() {
                     User.create({
                         firstName: 'moderator'+(idx ? idx : ''),
                         ldap_id: 'moderator'+(idx ? idx : ''),
-                        roles: User.getRoleCode('moderator') | User.getRoleCode('moderator')
+                        roles: User.getRoleCode('moderator') | User.getRoleCode('user')
                     }).then(function (user) {
                         // debug(proj);
                         proj.addMember(user);

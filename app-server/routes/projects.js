@@ -99,22 +99,27 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 router.post('/:proj_id/images/upload',
+    function (req, res, next) {
+        debug('---post project image---');
+        debug(req.body);
+        next();
+    },
     project_resolver({require: true}),
     upload.single('scheme'),
     function (req, res, next) {
         if(!!req.file){
             var fileModel = File.build(req.file);
-            fileModel.url = url.resolve('/api/img/', fileModel.filename);
+            fileModel.uri = url.resolve('/api/img/', fileModel.filename);
             fileModel.ProjectId = req.project.id;
             fileModel.save().then(
                 function (fileModel) {
-                    res.set('Location', fileModel.url);
+                    res.set('Location', fileModel.uri);
                     res.sendStatus(201);
                 },
                 next
             )
         }else{
-            res.sendStatus(401);
+            res.sendStatus(400);
         }
     }
 )

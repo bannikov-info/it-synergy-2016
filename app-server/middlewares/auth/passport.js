@@ -38,16 +38,23 @@ passport.serializeUser(function (usr, done) {
 });
 passport.deserializeUser(function (id, done) {
     debug('deserializeUser: ',id);
+    debug(typeof(id));
     // done(null, User.findById(id);
     User.findById(id).then(
         function (usr) {
-            if(!usr){
-                done(null, false, {message: 'user '+id+' not found'});
-            }else{
+            debug(!!usr)
+            if(!!usr){
+                debug('deserealizeUser: found');
+                console.log(usr.roles);
                 done(null, usr);
+            }else{
+                debug('deserealizeUser: not found');
+                done(null, false, {message: 'user '+id+' not found'});
             }
         },
         function (err) {
+            debug('deserealizeUser: search error')
+            debug(err);
             done(err, false);
         }
     )

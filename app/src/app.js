@@ -2,7 +2,8 @@
     // console.log(!!angular);
     angular
         .module('app', ['ngMaterial', 'users', 'ngRoute', 'voting',
-                               'ja.qr', 'projects', 'auth', 'ngResource'])
+                        'ja.qr', 'projects', 'auth', 'ngResource',
+                        'ngFileUpload'])
         .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
 
             $mdIconProvider
@@ -17,7 +18,8 @@
                 .icon("favorite24v" , "./assets/svg/ic_favorite_vote.svg" , 24)
                 .icon("qr" , "./assets/svg/ic_pages_black_48px.svg" , 48)
                 .icon("projects" , "./assets/svg/ic_dvr_48px.svg" , 48)
-                .icon("voting" , "./assets/svg/voting.svg" , 48);
+                .icon("voting" , "./assets/svg/voting.svg" , 48)
+                .icon("upload" , "./assets/svg/ic_add_a_photo_48px.svg" , 48);
 
                 $mdThemingProvider.theme('default')
                     .primaryPalette('green')

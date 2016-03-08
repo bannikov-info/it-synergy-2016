@@ -2,9 +2,10 @@
     'use strict';
 
     angular.module('projects')
-        .service('projectsService', ['$q', '$resource', ProjectsService]);
+        .service('projectsService', ProjectsService);
 
-    function ProjectsService($q, $resource){
+    ProjectsService.$inject = ['$q', '$resource', '$httpParamSerializerJQLike'];
+    function ProjectsService($q, $resource, $httpParamSerializerJQLike){
         var projResource = $resource('/projects/:proj_id',
             {proj_id: 'me'},
             {
@@ -58,9 +59,20 @@
                         return null;
                     }
                 },
-                postSchemeImage: {
+                uploadFile: {
                     method: 'POST',
-                    url: '/projects/:proj_id/images/upload'
+                    url: '/projects/:proj_id/images/upload',
+                    transformRequest: function (data) {
+                        var fd = new FormData();
+                        angular.forEach(data, function(value, key) {
+                            fd.append(key, value);
+                        });
+                        return fd;
+                    },
+                    headers:{
+                        'Content-Type': undefined,
+                        enctype:'multipart/form-data'
+                    }
                 }
             }
         );
