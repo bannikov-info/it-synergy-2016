@@ -20,7 +20,7 @@
             if(!!file){
                 console.log('file change: '+file.name);
                 console.log(file);
-                projectsService.uploadFile({proj_id}, {scheme: file},
+                projectsService.uploadFile({proj_id: proj_id}, {scheme: file},
                     function (resp) {
                         // body...
                         console.log('upload success: ');

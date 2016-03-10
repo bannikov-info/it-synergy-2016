@@ -1,0 +1,23 @@
+<md-card>
+    <md-card-header>
+        <md-card-avatar>
+            <md-icon></md-icon>
+        </md-card-avatar>
+        <md-card-header-text>
+            <h2 class="md-title">{{a.name}}</h2>
+        </md-card-header-text>
+    </md-card-header>
+    <div class="" style="min-height: 150px;">
+        <img ng-src="{{a.schemeUrl[a.schemeUrl.length-1].url}}" alt=""/>
+    </div>
+
+    <!-- <md-card-content>
+        <img ng-src="{{a.schemeUrl[a.schemeUrl.length-1].url}}" alt="" style="max-width: 100%; max-height: 100%; width: 100%"/>
+    </md-card-content> -->
+    <md-card-actions layout="row" layout-align="end center">
+      <input type="file" accept="image/*" class="ng-hide" ng-model="scheme[a.id]" id="scheme{{a.id}}" ngf-select ngf-change="ctrl.uploadFileToProject($file, a.id, $event)">
+      <label for="scheme{{a.id}}" class="md-button md-icon-button1">
+          <md-icon md-svg-icon="upload"/>
+      </label>
+    </md-card-actions>
+</md-card>
