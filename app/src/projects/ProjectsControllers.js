@@ -1,11 +1,10 @@
 ;(function () {
     var module = angular.module('projects');
     module
-        .controller('ProjectsIndexController',
-            ['projectsService',
-             ProjectsIndexController
-         ]);
+        .controller('ProjectsIndexController', ProjectsIndexController)
+        .controller('ProjectController', ProjectController);
 
+    ProjectsIndexController.$inject = ['projectsService'];
     function ProjectsIndexController(projectsService) {
         // debugger;
         var self = this;
@@ -14,6 +13,14 @@
         self.projects = projectsService.getAllProjects({}, function () {
             // debugger;
         });
+
+
+    };
+
+    ProjectController.$inject=['$scope', 'projectsService'];
+    function ProjectController($scope, projectsService) {
+        // body...
+        var self = this;
 
         self.uploadFileToProject = function (file, proj_id, ev) {
             // debugger;
@@ -33,5 +40,5 @@
                 )
             }
         }
-    };
+    }
 }())
