@@ -15,6 +15,9 @@
         <img ng-src="{{a.schemeUrl[a.schemeUrl.length-1].url}}" alt="" style="max-width: 100%; max-height: 100%; width: 100%"/>
     </md-card-content> -->
     <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-icon-button">
+            <md-icon md-svg-icon="g-drive"/>
+        </md-button>
       <input type="file" accept="image/*" class="ng-hide" ng-model="scheme[project.id]" id="scheme{{project.id}}" ngf-select ngf-change="ctrl.uploadFileToProject($file, project.id, $event)">
       <label for="scheme{{project.id}}" class="md-button md-icon-button">
           <md-icon md-svg-icon="upload"/>
