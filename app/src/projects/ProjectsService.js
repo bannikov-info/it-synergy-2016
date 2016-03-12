@@ -36,6 +36,26 @@
                         }
                     }
                 },
+                get:{
+                    transformResponse: function(data, headers, status){
+                        if(status === 200){
+                            var projectModel = JSON.parse(data);
+                            if (projectModel instanceof Object){
+                                Object.defineProperty(projectModel, 'schemeUrl', {
+                                    enumerable:true,
+                                    get: function () {
+                                        // console.log('get project images');
+                                        return projResource.getProjectImages({proj_id: projectModel.id});
+                                    }
+                                });
+
+                                return projectModel;
+                            }else{
+                                throw new TypeError('expected array data');
+                            }
+                        }
+                    }
+                },
                 getProjectImages:{
                     method: 'GET',
                     url: 'projects/:proj_id/images',

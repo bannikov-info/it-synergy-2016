@@ -1,0 +1,16 @@
+<md-dialog class="md-gallery" md-theme="md-gallery">
+    <md-toolbar class="md-gallery__toolbar">
+        <div class="md-toolbar-tools">
+            <span flex></span>
+            <md-button ng-click="gallery.close($event)" class="md-gallery__button">
+                Close
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-gallery__content"
+                       ng-click="gallery.clickHandler($event)"
+                       ng-keydown="gallery.keyEventHandler($event)"
+                       ng-keypress="gallery.keyEventHandler($event)">
+        <img ng-src="{{gallery.imgSrc}}" class="md-gallery__view-port" alt="" style=""/>
+    </md-dialog-content>
+</md-dialog>

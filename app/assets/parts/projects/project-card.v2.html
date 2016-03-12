@@ -1,4 +1,4 @@
-<md-card ng-controller="ProjectController as ctrl">
+<md-card ng-controller="ProjectController as ctrl" ng-click="goProject(project.id)">
     <md-card-header>
         <md-card-avatar>
             <md-icon></md-icon>
@@ -11,16 +11,13 @@
         <img ng-src="{{project.schemeUrl[project.schemeUrl.length-1].url}}" alt=""/>
     </div>
 
-    <!-- <md-card-content>
-        <img ng-src="{{a.schemeUrl[a.schemeUrl.length-1].url}}" alt="" style="max-width: 100%; max-height: 100%; width: 100%"/>
-    </md-card-content> -->
-    <md-card-actions layout="row" layout-align="end center">
-        <md-button class="md-icon-button">
+    <!-- <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-icon-button" lk-google-picker>
             <md-icon md-svg-icon="g-drive"/>
         </md-button>
-      <input type="file" accept="image/*" class="ng-hide" ng-model="scheme[project.id]" id="scheme{{project.id}}" ngf-select ngf-change="ctrl.uploadFileToProject($file, project.id, $event)">
-      <label for="scheme{{project.id}}" class="md-button md-icon-button">
-          <md-icon md-svg-icon="upload"/>
+      <label for="scheme{{project.id}}" class="md-button md-icon-button1">
+          Загрузить файл
       </label>
-    </md-card-actions>
+      <input type="file" accept1="image/*" class="ng-hide" ng-model="scheme[project.id]" id="scheme{{project.id}}" ngf-select ngf-change="ctrl.uploadFileToProject($file, project.id, $event)">
+    </md-card-actions> -->
 </md-card>

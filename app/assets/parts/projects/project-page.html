@@ -1,0 +1,43 @@
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
+    <md-toolbar layout="row" class="md-whiteframe-z1">
+        <div class="md-toolbar-tools">
+            <h3>{{project.name}}</h3>
+            <span flex></span>
+
+            <md-menu md-position-mode="target-right target">
+                <md-button class="md-icon-button" aria-label="Upload To Project" ng-click="$mdOpenMenu($event)">
+                    <md-icon md-svg-icon="upload"></md-icon>
+                </md-button>
+                <md-menu-content>
+                    <md-menu-item ng-click="$mdCloseMenu($event)">
+                        <label for="scheme{{project.id}}" class="md-button md-icon-button1">
+                            <md-icon md-svg-icon="upload"></md-icon>
+                            Загрузить с устройства
+                        </label>
+                        <input type="file" accept1="image/*" class="ng-hide" ng-model="scheme[project.id]" id="scheme{{project.id}}" ngf-select ngf-change="ctrl.uploadFileToProject($file, project.id, $event)">
+                    </md-menu-item>
+                    <!-- <md-menu-item  ng-click="$mdCloseMenu($event)">
+                        <md-button lk-google-picker on-picked="onPicked(docs)">
+                            <md-icon md-svg-icon="g-drive"></md-icon>
+                            Загрузить из Google Drive
+                        </md-button>
+                    </md-menu-item> -->
+                </md-menu-content>
+            </md-menu>
+        </div>
+
+    </md-toolbar>
+<!-- <h1>Hello</h1> -->
+<md-content id="content" class="carddemoBasicUsage" flex layout="column">
+    <md-grid-list md-cols="5" md-cols-md="3" md-cols-sm="2" md-cols-xs="1"
+                  md-row-height="1:1"
+                  md-gutter="1em">
+        <md-grid-tile ng-repeat="image in project.schemeUrl" style="overflow:hidden" class="md-whiteframe-z1">
+            <img ng-src="{{image.url}}" alt="" style="height: auto  !important; width:100%;" ng-click="showImage(image.url, $event)"/>
+            <md-grid-tile-footer>
+                <h3>#{{image.tag}}</h3>
+            </md-grid-tile-footer>
+        </md-grid-tile>
+    </md-grid-list>
+</md-content>
+</div>

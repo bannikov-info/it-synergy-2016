@@ -19,12 +19,15 @@
                 .icon("qr" , "./assets/svg/ic_pages_black_48px.svg" , 48)
                 .icon("projects" , "./assets/svg/ic_dvr_48px.svg" , 48)
                 .icon("voting" , "./assets/svg/voting.svg" , 48)
-                .icon("upload" , "./assets/svg/ic_add_a_photo_48px.svg" , 48)
+                .icon("upload" , "./assets/svg/ic_file_upload_48px.svg" , 48)
                 .icon('g-drive', "./assets/svg/Google_Drive_Logo.svg", 48);
 
                 $mdThemingProvider.theme('default')
                     .primaryPalette('green')
                     .accentPalette('yellow');
+                $mdThemingProvider.theme('md-gallery')
+                        .primaryPalette('orange')
+                        .accentPalette('light-blue');
 
                 $routeProvider
                     .when('/', {
@@ -50,6 +53,12 @@
                     .when('/projects', {
                         templateUrl: './assets/parts/projects/index.html',
                         controller: 'ProjectsIndexController',
+                        controllerAs: 'ctrl',
+                        resolve:{}
+                    })
+                    .when('/projects/:proj_id', {
+                        templateUrl: './assets/parts/projects/project-page.html',
+                        controller: 'ProjectController',
                         controllerAs: 'ctrl',
                         resolve:{}
                     })

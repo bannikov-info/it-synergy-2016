@@ -24,6 +24,8 @@
     "angular-qr": "latest",
     "angular-resource": "^1.5.0",
     "ng-file-upload": "~12.0.1",
-    "ng-file-upload-shim": "~12.0.1"
+    "ng-file-upload-shim": "~12.0.1",
+    "angular-google-picker": "~0.2.2",
+    "ngGAPI": "https://github.com/christiansmith/ngGAPI.git"
   }
 }
